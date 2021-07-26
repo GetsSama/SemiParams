@@ -138,5 +138,206 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/text2"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/head"
+            android:text="Расчитанные значения"
+            android:textSize="25dp"
+            android:layout_below="@+id/Solve"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:layout_marginTop="40dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/electron"
+            android:textSize="25dp"
+            android:text="n, см-3"
+            android:layout_below="@+id/head"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/electron_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/head"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/electron"
+            android:gravity="center"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hole"
+            android:textSize="25dp"
+            android:text="p, см-3"
+            android:layout_below="@+id/electron"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hole_val"
+            android:textSize="25dp"
+            android:layout_toRightOf="@+id/hole"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/electron"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/intrinsic"
+            android:text="ni, см-3"
+            android:textSize="25dp"
+            android:layout_below="@+id/hole"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/intrinsic_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/hole"
+            android:layout_toRightOf="@+id/intrinsic"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conductivity"
+            android:text="Sigma, См"
+            android:textSize="25dp"
+            android:layout_below="@+id/intrinsic"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/conductivity_val"
+            android:textSize="25dp"
+            android:layout_below="@id/intrinsic"
+            android:layout_toRightOf="@id/conductivity"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/resistiv"
+            android:text="Ro, Ом*см"
+            android:textSize="25dp"
+            android:layout_below="@+id/conductivity"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/resistiv_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/conductivity"
+            android:layout_toRightOf="@id/resistiv"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/doping"
+            android:textSize="25dp"
+            android:layout_below="@+id/resistiv"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/doping_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/resistiv"
+            android:layout_toRightOf="@+id/doping"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Nc"
+            android:text="Nc, см-3"
+            android:textSize="25dp"
+            android:layout_below="@+id/doping"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Nc_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/doping"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Nv"
+            android:text="Nv, см-3"
+            android:textSize="25dp"
+            android:layout_below="@+id/Nc"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Nv_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/Nc"
+            android:layout_toRightOf="@+id/Nv"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Eg"
+            android:text="Eg, эВ"
+            android:textSize="25dp"
+            android:layout_below="@id/Nv"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Eg_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/Nv"
+            android:layout_toRightOf="@+id/Eg"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Dinamic"
+            android:textSize="25dp"
+            android:layout_below="@+id/Eg"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Dinamic_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/Eg"
+            android:layout_toRightOf="@+id/Dinamic"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+
     </RelativeLayout>
 </ScrollView>
