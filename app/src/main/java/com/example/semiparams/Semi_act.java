@@ -21,7 +21,9 @@ public class Semi_act extends AppCompatActivity
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
 
     int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
-    float Temp, ParamOne, ParamTwo;
+    double Temp, ParamOne, ParamTwo;
+    final double Bolcman = 8.62e-5;
+    final double density_number = 4.831e15;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -32,7 +34,7 @@ public class Semi_act extends AppCompatActivity
         TextView dinamic = (TextView)findViewById(R.id.Dinamic);
         TextView electron_val = (TextView)findViewById(R.id.electron_val);
         TextView hole_val = (TextView)findViewById(R.id.hole_val);
-        TextView intrinsic_val = (TextView)findViewById(R.id.hole_val);
+        TextView intrinsic_val = (TextView)findViewById(R.id.intrinsic_val);
         TextView conductivity_val = (TextView)findViewById(R.id.conductivity_val);
         TextView resistiv_val = (TextView)findViewById(R.id.resistiv_val);
         TextView doping_val = (TextView)findViewById(R.id.doping_val);
@@ -55,7 +57,8 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                Temp = Float.parseFloat(charSequence.toString());
+                //Temp = Float.parseFloat(charSequence.toString());
+                Temp = Double.parseDouble(charSequence.toString());
             }
 
             @Override
@@ -72,7 +75,8 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                ParamOne = Float.parseFloat(charSequence.toString());
+                //ParamOne = Float.parseFloat(charSequence.toString());
+                ParamOne = Double.parseDouble(charSequence.toString());
             }
 
             @Override
@@ -89,7 +93,8 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                ParamTwo = Float.parseFloat(charSequence.toString());
+                //ParamTwo = Float.parseFloat(charSequence.toString());
+                ParamTwo = Double.parseDouble(charSequence.toString());
             }
 
             @Override
