@@ -3,9 +3,13 @@ package com.example.semiparams;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -17,6 +21,7 @@ public class Semi_act extends AppCompatActivity
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
 
     int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
+    float Temp, ParamOne, ParamTwo;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -25,6 +30,73 @@ public class Semi_act extends AppCompatActivity
         setContentView(R.layout.activity_semi);
         TextView dopant = (TextView)findViewById(R.id.doping);
         TextView dinamic = (TextView)findViewById(R.id.Dinamic);
+        TextView electron_val = (TextView)findViewById(R.id.electron_val);
+        TextView hole_val = (TextView)findViewById(R.id.hole_val);
+        TextView intrinsic_val = (TextView)findViewById(R.id.hole_val);
+        TextView conductivity_val = (TextView)findViewById(R.id.conductivity_val);
+        TextView resistiv_val = (TextView)findViewById(R.id.resistiv_val);
+        TextView doping_val = (TextView)findViewById(R.id.doping_val);
+        TextView Nc_val = (TextView)findViewById(R.id.Nc_val);
+        TextView Nv_val = (TextView)findViewById(R.id.Nv_val);
+        TextView Eg_val = (TextView)findViewById(R.id.Eg_val);
+        TextView Dinamic_val = (TextView)findViewById(R.id.Dinamic_val);
+        EditText Temper = (EditText)findViewById(R.id.temper_val);
+        EditText paramOne = (EditText)findViewById(R.id.text1);
+        EditText paramTwo = (EditText)findViewById(R.id.text2);
+        Button Solve = (Button)findViewById(R.id.Solve);
+
+        //Считываю заполняемые поля в переменные
+        Temper.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                Temp = Float.parseFloat(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+            }
+        });
+        paramOne.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                ParamOne = Float.parseFloat(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+            }
+        });
+        paramTwo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                ParamTwo = Float.parseFloat(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+            }
+        });
 
         //Создаю 4 спиннера
         Spinner mater = (Spinner) findViewById(R.id.mater);
@@ -46,7 +118,6 @@ public class Semi_act extends AppCompatActivity
         TypeOfCond.setAdapter(adapter_type);
         ParamOne.setAdapter(adapter_param1);
         ParamTwo.setAdapter(adapter_param2);
-
         //Слушатель нажатий на спиннеры
         AdapterView.OnItemSelectedListener SpinnerListener = new AdapterView.OnItemSelectedListener()
         {
@@ -87,9 +158,11 @@ public class Semi_act extends AppCompatActivity
                                 SpinnerChoiseTwo = 1;
                         };
                         if (SpinnerChoiseTwo==1)
-                            dopant.setText("Nd, см-3");
+                        {dopant.setText("Nd, см-3");}
+                        else if (SpinnerChoiseTwo==2)
+                        {dopant.setText("Na, см-3");}
                         else
-                            dopant.setText("Na, см-3");
+                        {dopant.setText("Примесь отсутствует");}
                         break;
                     case R.id.param1:
                         switch ((String) adapterView.getItemAtPosition(position))
@@ -120,9 +193,9 @@ public class Semi_act extends AppCompatActivity
                                 SpinnerChoiseFoure = 1;
                         };
                         if (SpinnerChoiseFoure==1)
-                            dinamic.setText("Время жизни, с");
+                            dinamic.setText("Tau, с");
                         else
-                            dinamic.setText("Диффузионная длина, см2/с");
+                            dinamic.setText("L, см");
                         break;
                 };
             }
@@ -132,12 +205,19 @@ public class Semi_act extends AppCompatActivity
             {
             }
         };
-
         //Присваиваю спиннерам слушатель
         mater.setOnItemSelectedListener(SpinnerListener);
         TypeOfCond.setOnItemSelectedListener(SpinnerListener);
         ParamOne.setOnItemSelectedListener(SpinnerListener);
         ParamTwo.setOnItemSelectedListener(SpinnerListener);
 
+        View.OnClickListener Solver = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View buttonSolve)
+            {
+
+            }
+        };
     }
 }

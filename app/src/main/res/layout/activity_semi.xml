@@ -55,6 +55,7 @@
             android:layout_below="@+id/conduct"
             android:layout_alignParentLeft="true"/>
         <EditText
+            android:id="@+id/temper_val"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:hint="300"
@@ -327,7 +328,7 @@
             android:id="@+id/Dinamic"
             android:textSize="25dp"
             android:layout_below="@+id/Eg"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -337,7 +338,28 @@
             android:layout_below="@+id/Eg"
             android:layout_toRightOf="@+id/Dinamic"
             android:layout_alignParentRight="true"
-            android:gravity="center"/>
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/coefDiff"
+            android:text="D, см2/с"
+            android:textSize="25dp"
+            android:layout_below="@+id/Dinamic"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/coefDiff_val"
+            android:textSize="25dp"
+            android:layout_below="@+id/Dinamic"
+            android:layout_toRightOf="@+id/coefDiff"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:layout_marginBottom="15dp"/>
 
     </RelativeLayout>
 </ScrollView>
