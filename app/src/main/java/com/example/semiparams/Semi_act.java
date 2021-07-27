@@ -1,7 +1,6 @@
 package com.example.semiparams;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.nfc.FormatException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,13 +11,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class Semi_act extends AppCompatActivity
 {
     String[] material = {"Si", "Ge", "GaAs"};
+    String[] Si_dopants = {"As", "P", "Sb", "Al", "B", "Ga", "In"};
     String[] Type = {"n-тип", "p-тип", "Собственный"};
     String[] Param1 = {"Удельное сопротивление", "Проводимость", "Концентрация примеси"};
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
+
+    double[] Si_dopant_ionization = {0.054, 0.045, 0.043, 0.072, 0.045, 0.074, 0.157};
 
     int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
     double Temp, ParamOne, ParamTwo;
@@ -46,6 +58,7 @@ public class Semi_act extends AppCompatActivity
         EditText paramOne = (EditText)findViewById(R.id.text1);
         EditText paramTwo = (EditText)findViewById(R.id.text2);
         Button Solve = (Button)findViewById(R.id.Solve);
+
 
         //Считываю заполняемые поля в переменные
         Temper.addTextChangedListener(new TextWatcher() {
@@ -224,5 +237,34 @@ public class Semi_act extends AppCompatActivity
 
             }
         };
+
+        /*MaterialParams mater1 = new MaterialParams();
+        mater1.setDopings(dopants);
+        String[] afterGet = mater1.getDopings();*/
+    }
+
+    public MaterialParams ParamsReader (String FileName)
+    {
+        MaterialParams material = null;
+        ArrayList<String> Dopings = new ArrayList<>();
+
+        try (BufferedReader bufRead = new BufferedReader(new FileReader(FileName)))
+        {
+            String s;
+            while ((s=bufRead.readLine()) instanceof String)
+            {
+                Dopings.add(s);
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        catch (IOException e)
+        {
+            Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
+        return material;
     }
 }
