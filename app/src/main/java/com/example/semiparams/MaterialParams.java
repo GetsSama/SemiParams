@@ -6,7 +6,15 @@ public class MaterialParams
     String[] Dopings;
     double[] activationEnergis;
     double effMass_electron, effMass_hole, mobility_electron, mobility_hole, Eg0, koefEg, dielectricConst;
-    private final double k = 8.62e-5;
+
+    {
+        //Инициализатор???
+    }
+
+    MaterialParams(String nameMaterial)
+    {
+        this.nameMaterial = nameMaterial;
+    }
 
     MaterialParams(String nameMaterial, String[] Dopings, double[] activationEnergis, double effMass_electron, double effMass_hole, double mobility_electron, double mobility_hole,double Eg0,double koefEg, double dielectricConst)
     {
@@ -32,11 +40,11 @@ public class MaterialParams
 
     public double Dn(double T)
     {
-        return k*T*mobility_electron;
+        return SemiConstants.Bolcman*T*mobility_electron;
     }
     public  double Dp(double T)
     {
-        return k*T*mobility_hole;
+        return SemiConstants.Bolcman*T*mobility_hole;
     }
     public double Eg(double T)
     {

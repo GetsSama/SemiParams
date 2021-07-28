@@ -34,8 +34,6 @@ public class Semi_act extends AppCompatActivity
 
     int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
     double Temp, ParamOne, ParamTwo;
-    final double Bolcman = 8.62e-5;
-    final double density_number = 4.831e15;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -241,20 +239,50 @@ public class Semi_act extends AppCompatActivity
         /*MaterialParams mater1 = new MaterialParams();
         mater1.setDopings(dopants);
         String[] afterGet = mater1.getDopings();*/
+        ParamsReader(Si, "Si.txt");
     }
 
-    public MaterialParams ParamsReader (String FileName)
+    MaterialParams Si = new MaterialParams("Si");
+    public void ParamsReader (MaterialParams material ,String FileName)
     {
-        MaterialParams material = null;
         ArrayList<String> Dopings = new ArrayList<>();
 
         try (BufferedReader bufRead = new BufferedReader(new FileReader(FileName)))
         {
-            String s;
-            while ((s=bufRead.readLine()) instanceof String)
+            double val = 0;
+            Object obj = null;
+            boolean flag = true;
+            // Читаем из файла до тех пор, пока не закончатся строковые типы
+            while (flag)
             {
-                Dopings.add(s);
+                try
+                {
+                    obj = bufRead.readLine();
+                    val = Double.parseDouble(obj.toString());
+                    flag = false;
+                }
+                catch (NumberFormatException e)
+                {
+                    Dopings.add(obj.toString());
+                }
             }
+            //Инициализируем два массива - примеси и их энергии активации
+            material.Dopings = new String[Dopings.size()];
+            material.activationEnergis = new double[Dopings.size()];
+            //Заполнение массивов
+            for (int i=0; i<Dopings.size(); i++)
+                material.Dopings[i] = Dopings.get(i);
+            material.activationEnergis[0] = val;
+            for (int i=1; i<Dopings.size(); i++)
+                material.activationEnergis[i] = Double.parseDouble(bufRead.readLine());
+            //Заполняем оставшиеся параметры
+            material.effMass_electron = Double.parseDouble(bufRead.readLine());
+            material.effMass_hole = Double.parseDouble(bufRead.readLine());
+            material.mobility_electron = Double.parseDouble(bufRead.readLine());
+            material.mobility_hole = Double.parseDouble(bufRead.readLine());
+            material.Eg0 = Double.parseDouble(bufRead.readLine());
+            material.koefEg = Double.parseDouble(bufRead.readLine());
+            material.dielectricConst = Double.parseDouble(bufRead.readLine());
         }
         catch (FileNotFoundException e)
         {
@@ -264,7 +292,5 @@ public class Semi_act extends AppCompatActivity
         {
             Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
         }
-
-        return material;
     }
 }
