@@ -29,6 +29,7 @@ public class Semi_act extends AppCompatActivity
     String[] Param1 = {"Удельное сопротивление", "Проводимость", "Концентрация примеси"};
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
     String PATH_TO_DATA = "/data/data/com.example.semiparams/files/";
+    MaterialParams MaterialParams;
 
     int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
     double Temp, ParamOne, ParamTwo;
@@ -138,24 +139,13 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id)
             {
+                String ItemText = (String) adapterView.getItemAtPosition(position);
                 switch (adapterView.getId())
                 {
                     case R.id.mater:
-                        switch ((String) adapterView.getItemAtPosition(position))
-                        {
-                            case "Si":
-                                SpinnerChoiseOne = 1;
-                                break;
-                            case "Ge":
-                                SpinnerChoiseOne = 2;
-                                break;
-                            case "GaAs":
-                                SpinnerChoiseOne = 3;
-                                break;
-                            default:
-                                SpinnerChoiseOne = 1;
-                        };
-                        break;
+                        MaterialParams = new MaterialParams(ItemText);
+                        ParamsReader(MaterialParams,PATH_TO_DATA+ItemText+".txt");
+
                     case R.id.conduction:
                         switch ((String) adapterView.getItemAtPosition(position))
                         {
@@ -237,11 +227,11 @@ public class Semi_act extends AppCompatActivity
     }
 
     //Функция для считывания констант материала полупроводника из файла для этого материала
-    public void ParamsReader (MaterialParams material ,String FileName)
+    public void ParamsReader (MaterialParams material ,String PathToFile)
     {
         ArrayList<String> Dopings = new ArrayList<>();
 
-        try (BufferedReader bufRead = new BufferedReader(new FileReader(FileName)))
+        try (BufferedReader bufRead = new BufferedReader(new FileReader(PathToFile)))
         {
             double val = 0;
             double[] energy;
@@ -280,6 +270,16 @@ public class Semi_act extends AppCompatActivity
             material.Eg0 = Double.parseDouble(bufRead.readLine());
             material.koefEg = Double.parseDouble(bufRead.readLine());
             material.dielectricConst = Double.parseDouble(bufRead.readLine());
+            //Проверка после считывания и активация словаря примесь-энергия
+            if (material.dielectricConst !=0 && (bufRead.readLine())==null)
+            {
+                Toast.makeText(this,material.nameMaterial+" загружен", Toast.LENGTH_SHORT).show();
+                material.ActivateDict();
+            }
+            else
+            {
+                Toast.makeText(this, "Неверный формат файла параметров материала!", Toast.LENGTH_LONG).show();
+            }
         }
         catch (FileNotFoundException e)
         {

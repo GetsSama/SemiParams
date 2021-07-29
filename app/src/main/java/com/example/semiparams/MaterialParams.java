@@ -64,9 +64,9 @@ public class MaterialParams
         for (int i=0; i<NumberDopings; i++)
             this.activationEnergis[i] = activationEnergis[i];
     }
-    public void setDopEnergisDict (int NumberDopings, String[] Dopings, double[] activationEnergis)
+    public void ActivateDict ()
     {
-        for (int i=0; i<NumberDopings; i++)
+        for (int i=0; i<Dopings.length; i++)
             DopEnergisDict.put(Dopings[i], activationEnergis[i]);
     }
 }
