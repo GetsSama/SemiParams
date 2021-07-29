@@ -25,12 +25,10 @@ import java.util.ArrayList;
 public class Semi_act extends AppCompatActivity
 {
     String[] material = {"Si", "Ge", "GaAs"};
-    String[] Si_dopants = {"As", "P", "Sb", "Al", "B", "Ga", "In"};
     String[] Type = {"n-тип", "p-тип", "Собственный"};
     String[] Param1 = {"Удельное сопротивление", "Проводимость", "Концентрация примеси"};
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
-
-    double[] Si_dopant_ionization = {0.054, 0.045, 0.043, 0.072, 0.045, 0.074, 0.157};
+    String PATH_TO_DATA = "/data/data/com.example.semiparams/files/";
 
     int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
     double Temp, ParamOne, ParamTwo;
@@ -236,13 +234,9 @@ public class Semi_act extends AppCompatActivity
             }
         };
 
-        /*MaterialParams mater1 = new MaterialParams();
-        mater1.setDopings(dopants);
-        String[] afterGet = mater1.getDopings();*/
-        ParamsReader(Si, "Si.txt");
     }
 
-    MaterialParams Si = new MaterialParams("Si");
+    //Функция для считывания констант материала полупроводника из файла для этого материала
     public void ParamsReader (MaterialParams material ,String FileName)
     {
         ArrayList<String> Dopings = new ArrayList<>();
@@ -250,6 +244,7 @@ public class Semi_act extends AppCompatActivity
         try (BufferedReader bufRead = new BufferedReader(new FileReader(FileName)))
         {
             double val = 0;
+            double[] energy;
             Object obj = null;
             boolean flag = true;
             // Читаем из файла до тех пор, пока не закончатся строковые типы
@@ -266,15 +261,17 @@ public class Semi_act extends AppCompatActivity
                     Dopings.add(obj.toString());
                 }
             }
-            //Инициализируем два массива - примеси и их энергии активации
-            material.Dopings = new String[Dopings.size()];
-            material.activationEnergis = new double[Dopings.size()];
-            //Заполнение массивов
-            for (int i=0; i<Dopings.size(); i++)
-                material.Dopings[i] = Dopings.get(i);
-            material.activationEnergis[0] = val;
+            //Создаем локальный массив энергий и примесей
+            energy = new double[Dopings.size()];
+            String[] dopings = new String[Dopings.size()];
+            Dopings.toArray(dopings);
+            //Заполнение локального массива энергий активации
+            energy[0] = val;
             for (int i=1; i<Dopings.size(); i++)
-                material.activationEnergis[i] = Double.parseDouble(bufRead.readLine());
+                energy[i] = Double.parseDouble(bufRead.readLine());
+            //Передаем считанные данные в объект MaterialParams
+            material.setDopings(Dopings.size(),dopings);
+            material.setDopingsEnergy(Dopings.size(),energy);
             //Заполняем оставшиеся параметры
             material.effMass_electron = Double.parseDouble(bufRead.readLine());
             material.effMass_hole = Double.parseDouble(bufRead.readLine());

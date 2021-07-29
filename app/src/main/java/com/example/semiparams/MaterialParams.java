@@ -1,11 +1,14 @@
 package com.example.semiparams;
 
+import java.util.HashMap;
+
 public class MaterialParams
 {
     String nameMaterial;
-    String[] Dopings;
-    double[] activationEnergis;
+    private String[] Dopings;
+    private double[] activationEnergis;
     double effMass_electron, effMass_hole, mobility_electron, mobility_hole, Eg0, koefEg, dielectricConst;
+    HashMap<String, Double> DopEnergisDict = new HashMap<>();
 
     {
         //Инициализатор???
@@ -15,7 +18,6 @@ public class MaterialParams
     {
         this.nameMaterial = nameMaterial;
     }
-
     MaterialParams(String nameMaterial, String[] Dopings, double[] activationEnergis, double effMass_electron, double effMass_hole, double mobility_electron, double mobility_hole,double Eg0,double koefEg, double dielectricConst)
     {
         int len = Dopings.length;
@@ -49,5 +51,22 @@ public class MaterialParams
     public double Eg(double T)
     {
         return Eg0-koefEg*1e-4*T;
+    }
+    public void setDopings (int NumberDopings, String[] Dopings)
+    {
+        this.Dopings = new String[NumberDopings];
+        for (int i=0; i<NumberDopings; i++)
+            this.Dopings[i] = Dopings[i];
+    }
+    public void setDopingsEnergy (int NumberDopings, double[] activationEnergis)
+    {
+        this.activationEnergis = new double[NumberDopings];
+        for (int i=0; i<NumberDopings; i++)
+            this.activationEnergis[i] = activationEnergis[i];
+    }
+    public void setDopEnergisDict (int NumberDopings, String[] Dopings, double[] activationEnergis)
+    {
+        for (int i=0; i<NumberDopings; i++)
+            DopEnergisDict.put(Dopings[i], activationEnergis[i]);
     }
 }
