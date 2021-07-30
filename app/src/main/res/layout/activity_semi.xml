@@ -12,79 +12,94 @@
 
         <TextView
             android:id="@+id/material"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:text="Материал"
-            android:textSize="25dp"
-            android:layout_alignParentLeft="true"/>
+            android:textSize="25dp" />
+
         <Spinner
+            android:id="@+id/mater"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/mater"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/material"
             android:layout_above="@+id/conduct"
+            android:layout_alignLeft="@+id/conduction"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignLeft="@+id/conduction"/>
+            android:layout_toRightOf="@+id/material" />
 
 
         <TextView
             android:id="@+id/conduct"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Тип проводимости"
-            android:textSize="25dp"
             android:layout_below="@+id/material"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="Материал примеси"
+            android:textSize="25dp" />
+
+        <CheckBox
+            android:id="@+id/Native"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/conduct"
+            android:layout_alignParentLeft="true"
+            android:onClick="onCheckClick"
+            android:text="Собственный"
+            android:textSize="20dp" />
+
         <Spinner
             android:id="@+id/conduction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/material"
-            android:layout_toRightOf="@+id/conduct"
-            android:layout_above="@+id/temper"
-            android:layout_alignParentRight="true"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/conduct"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/Native"
+            android:layout_above="@+id/temper_val"/>
 
 
         <TextView
             android:id="@+id/temper"
-            android:layout_height="40dp"
             android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/Native"
+            android:layout_alignParentLeft="true"
             android:text="Температура, К"
-            android:textSize="25dp"
-            android:layout_below="@+id/conduct"
-            android:layout_alignParentLeft="true"/>
+            android:textSize="25dp" />
+
         <EditText
             android:id="@+id/temper_val"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:hint="300"
-            android:inputType="numberDecimal"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/paramOne"
+            android:layout_below="@+id/Native"
+            android:layout_alignParentRight="true"
             android:layout_gravity="center"
             android:layout_toRightOf="@+id/temper"
-            android:layout_below="@+id/conduct"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/paramOne"
-            android:layout_alignLeft="@+id/conduction"/>
+            android:gravity="center"
+            android:hint="300"
+            android:inputType="numberDecimal" />
 
 
         <TextView
             android:id="@+id/paramOne"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Параметр 1"
-            android:textSize="25dp"
+            android:layout_below="@+id/temper"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/temper"/>
+            android:text="Параметр 1"
+            android:textSize="25dp" />
+
         <Spinner
             android:id="@+id/param1"
             android:layout_width="wrap_content"
-            android:layout_height= "match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/text1"
             android:layout_below="@+id/temper"
-            android:layout_toRightOf="@+id/paramOne"
             android:layout_alignParentRight="true"
-            android:layout_above="@+id/text1"/>
+            android:layout_toRightOf="@+id/paramOne" />
 
 
         <EditText

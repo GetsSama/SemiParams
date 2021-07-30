@@ -69,4 +69,8 @@ public class MaterialParams
         for (int i=0; i<Dopings.length; i++)
             DopEnergisDict.put(Dopings[i], activationEnergis[i]);
     }
+    public String getDopings(int i)
+    {
+        return this.Dopings[i];
+    }
 }

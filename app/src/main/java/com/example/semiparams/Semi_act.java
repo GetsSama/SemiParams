@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +27,9 @@ import java.util.ArrayList;
 public class Semi_act extends AppCompatActivity
 {
     String[] material = {"Si", "Ge", "GaAs"};
-    String[] Type = {"n-тип", "p-тип", "Собственный"};
+    //String[] Type;
+    ArrayList<String> Type = new ArrayList<String>();
+    String GetType, LastChoise;
     String[] Param1 = {"Удельное сопротивление", "Проводимость", "Концентрация примеси"};
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
     String PATH_TO_DATA = "/data/data/com.example.semiparams/files/";
@@ -55,6 +59,7 @@ public class Semi_act extends AppCompatActivity
         EditText paramOne = (EditText)findViewById(R.id.text1);
         EditText paramTwo = (EditText)findViewById(R.id.text2);
         Button Solve = (Button)findViewById(R.id.Solve);
+        CheckBox Check = (CheckBox)findViewById(R.id.Native);
 
 
         //Считываю заполняемые поля в переменные
@@ -120,19 +125,21 @@ public class Semi_act extends AppCompatActivity
         Spinner ParamTwo = (Spinner) findViewById(R.id.param2);
         //Добаляю адаптеры для спиннеров
         ArrayAdapter<String> adapter_material = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, material);
-        ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
+        //ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
         ArrayAdapter<String> adapter_param1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Param1);
         ArrayAdapter<String> adapter_param2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Param2);
         //Настраиваю адаптеры
         adapter_material.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter_param1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter_param2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Адаптирую спиннеры
         mater.setAdapter(adapter_material);
-        TypeOfCond.setAdapter(adapter_type);
+        //TypeOfCond.setAdapter(adapter_type);
         ParamOne.setAdapter(adapter_param1);
         ParamTwo.setAdapter(adapter_param2);
+
+
         //Слушатель нажатий на спиннеры
         AdapterView.OnItemSelectedListener SpinnerListener = new AdapterView.OnItemSelectedListener()
         {
@@ -145,28 +152,13 @@ public class Semi_act extends AppCompatActivity
                     case R.id.mater:
                         MaterialParams = new MaterialParams(ItemText);
                         ParamsReader(MaterialParams,PATH_TO_DATA+ItemText+".txt");
-
-                    case R.id.conduction:
-                        switch ((String) adapterView.getItemAtPosition(position))
+                        Type.clear();
+                        //Type = MaterialParams.DopEnergisDict.keySet().toArray(new String[MaterialParams.DopEnergisDict.size()]);
+                        for (int i=0; i<MaterialParams.DopEnergisDict.size(); i++)
                         {
-                            case "n-тип":
-                                SpinnerChoiseTwo = 1;
-                                break;
-                            case "p-тип":
-                                SpinnerChoiseTwo = 2;
-                                break;
-                            case "Собственный":
-                                SpinnerChoiseTwo = 3;
-                                break;
-                            default:
-                                SpinnerChoiseTwo = 1;
-                        };
-                        if (SpinnerChoiseTwo==1)
-                        {dopant.setText("Nd, см-3");}
-                        else if (SpinnerChoiseTwo==2)
-                        {dopant.setText("Na, см-3");}
-                        else
-                        {dopant.setText("Примесь отсутствует");}
+                            Type.add(MaterialParams.getDopings(i));
+                        }
+                        //TypeOfCond.notify();
                         break;
                     case R.id.param1:
                         switch ((String) adapterView.getItemAtPosition(position))
@@ -209,12 +201,37 @@ public class Semi_act extends AppCompatActivity
             {
             }
         };
+
+        ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
+        adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        TypeOfCond.setAdapter(adapter_type);
+        //Слушатель нажатий на выбор примеси
+       AdapterView.OnItemSelectedListener DopingListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                if ((parent.getId() == R.id.conduction)&&(GetType!="Собственный"))
+                {
+                    GetType = GiveType(MaterialParams.nameMaterial, (String)parent.getItemAtPosition(position));
+                    LastChoise = GetType;
+                }
+                else
+                    LastChoise = GiveType(MaterialParams.nameMaterial, (String)parent.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        };
+
+
         //Присваиваю спиннерам слушатель
         mater.setOnItemSelectedListener(SpinnerListener);
-        TypeOfCond.setOnItemSelectedListener(SpinnerListener);
+        TypeOfCond.setOnItemSelectedListener(DopingListener);
         ParamOne.setOnItemSelectedListener(SpinnerListener);
         ParamTwo.setOnItemSelectedListener(SpinnerListener);
-
         View.OnClickListener Solver = new View.OnClickListener()
         {
             @Override
@@ -289,5 +306,68 @@ public class Semi_act extends AppCompatActivity
         {
             Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
         }
+    }
+    //Функция для определения типа примеси
+    public String GiveType (String MaterialName, String Doping)
+    {
+        String Type = "";
+        String s;
+        String path = PATH_TO_DATA + "Dopings_" + MaterialName;
+        ArrayList<String> Dopings_n = new ArrayList<String>();
+        ArrayList<String> Dopings_p = new ArrayList<String>();
+
+        try (BufferedReader bufReader = new BufferedReader(new FileReader(path+"_n.txt")))
+        {
+            while ((s=bufReader.readLine())!=null)
+                Dopings_n.add(s);
+        }
+        catch (FileNotFoundException e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        catch (IOException e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        try (BufferedReader bufReader = new BufferedReader(new FileReader(path+"_p.txt")))
+        {
+            while ((s=bufReader.readLine())!=null)
+                Dopings_p.add(s);
+        }
+        catch (FileNotFoundException e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        catch (IOException e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        if (Dopings_n.indexOf(Doping)!=-1)
+        {
+            Toast.makeText(this, "N-тип", Toast.LENGTH_SHORT).show();
+            Type = "N_Type";
+        }
+        else if (Dopings_p.indexOf(Doping)!=-1)
+        {
+            Toast.makeText(this, "P-тип", Toast.LENGTH_SHORT).show();
+            Type = "P_Type";
+        }
+        else
+        {
+            Toast.makeText(this, "Примесь не найдена!", Toast.LENGTH_LONG).show();
+            Type = null;
+        }
+        return Type;
+    }
+    //Выбор собственного полупроводника
+    public void onCheckClick(View view)
+    {
+        CheckBox check = (CheckBox) view;
+        if (check.isChecked())
+            GetType = "Собственный";
+        else
+            GetType = LastChoise;
     }
 }
