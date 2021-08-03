@@ -52,12 +52,14 @@
 
         <Spinner
             android:id="@+id/conduction"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_above="@+id/temper_val"
             android:layout_below="@+id/conduct"
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/Native"
-            android:layout_above="@+id/temper_val"/>
+            android:layout_marginLeft="80dp"
+            android:gravity="center" />
 
 
         <TextView
@@ -122,14 +124,15 @@
             android:textSize="25dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/text1"/>
+
         <Spinner
             android:id="@+id/param2"
             android:layout_width="wrap_content"
-            android:layout_height= "fill_parent"
-            android:layout_toRightOf="@+id/paramTwo"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/text2"
             android:layout_below="@+id/text1"
             android:layout_alignParentRight="true"
-            android:layout_above="@+id/text2"/>
+            android:layout_toRightOf="@+id/paramTwo" />
 
 
         <EditText
@@ -245,13 +248,13 @@
             android:gravity="center"/>
 
         <TextView
+            android:id="@+id/resistiv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/resistiv"
-            android:text="Ro, Ом*см"
-            android:textSize="25dp"
             android:layout_below="@+id/conductivity"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            android:text="Ro, Ом*см"
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -272,14 +275,14 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
+            android:id="@+id/doping_val"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/doping_val"
-            android:textSize="25dp"
             android:layout_below="@+id/resistiv"
-            android:layout_toRightOf="@+id/doping"
             android:layout_alignParentRight="true"
-            android:gravity="center"/>
+            android:layout_toRightOf="@+id/doping"
+            android:gravity="center"
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -291,13 +294,13 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
+            android:id="@+id/Nc_val"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Nc_val"
-            android:textSize="25dp"
             android:layout_below="@+id/doping"
             android:layout_alignParentRight="true"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="wrap_content"

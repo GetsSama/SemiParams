@@ -60,6 +60,7 @@ public class Semi_act extends AppCompatActivity
         EditText paramTwo = (EditText)findViewById(R.id.text2);
         Button Solve = (Button)findViewById(R.id.Solve);
         CheckBox Check = (CheckBox)findViewById(R.id.Native);
+        Type.add("");
 
 
         //Считываю заполняемые поля в переменные
@@ -139,6 +140,9 @@ public class Semi_act extends AppCompatActivity
         ParamOne.setAdapter(adapter_param1);
         ParamTwo.setAdapter(adapter_param2);
 
+        ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
+        adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        TypeOfCond.setAdapter(adapter_type);
 
         //Слушатель нажатий на спиннеры
         AdapterView.OnItemSelectedListener SpinnerListener = new AdapterView.OnItemSelectedListener()
@@ -158,7 +162,7 @@ public class Semi_act extends AppCompatActivity
                         {
                             Type.add(MaterialParams.getDopings(i));
                         }
-                        //TypeOfCond.notify();
+                        adapter_type.notifyDataSetChanged();
                         break;
                     case R.id.param1:
                         switch ((String) adapterView.getItemAtPosition(position))
@@ -202,11 +206,9 @@ public class Semi_act extends AppCompatActivity
             }
         };
 
-        ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
-        adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        TypeOfCond.setAdapter(adapter_type);
+
         //Слушатель нажатий на выбор примеси
-       AdapterView.OnItemSelectedListener DopingListener = new AdapterView.OnItemSelectedListener() {
+        AdapterView.OnItemSelectedListener DopingListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
@@ -214,6 +216,10 @@ public class Semi_act extends AppCompatActivity
                 {
                     GetType = GiveType(MaterialParams.nameMaterial, (String)parent.getItemAtPosition(position));
                     LastChoise = GetType;
+                    if (LastChoise=="N-тип")
+                        dopant.setText("Nd, см-3");
+                    else if(LastChoise=="P-тип")
+                        dopant.setText("Na, см-3");
                 }
                 else
                     LastChoise = GiveType(MaterialParams.nameMaterial, (String)parent.getItemAtPosition(position));
@@ -366,7 +372,9 @@ public class Semi_act extends AppCompatActivity
     {
         CheckBox check = (CheckBox) view;
         if (check.isChecked())
+        {
             GetType = "Собственный";
+        }
         else
             GetType = LastChoise;
     }
