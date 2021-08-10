@@ -1,5 +1,6 @@
 package com.example.semiparams;
 
+import android.content.Context;
 import android.nfc.FormatException;
 import android.os.Bundle;
 import android.text.Editable;
@@ -154,14 +155,9 @@ public class Semi_act extends AppCompatActivity
                 switch (adapterView.getId())
                 {
                     case R.id.mater:
-                        MaterialParams = new MaterialParams(ItemText);
-                        ParamsReader(MaterialParams,PATH_TO_DATA+ItemText+".txt");
+                        MaterialParams = new MaterialParams(ItemText, Semi_act.this);
                         Type.clear();
-                        //Type = MaterialParams.DopEnergisDict.keySet().toArray(new String[MaterialParams.DopEnergisDict.size()]);
-                        for (int i=0; i<MaterialParams.DopEnergisDict.size(); i++)
-                        {
-                            Type.add(MaterialParams.getDopings(i));
-                        }
+                        Type.addAll(MaterialParams.getDopings());
                         adapter_type.notifyDataSetChanged();
                         break;
                     case R.id.param1:
@@ -206,7 +202,6 @@ public class Semi_act extends AppCompatActivity
             }
         };
 
-
         //Слушатель нажатий на выбор примеси
         AdapterView.OnItemSelectedListener DopingListener = new AdapterView.OnItemSelectedListener() {
             @Override
@@ -214,7 +209,7 @@ public class Semi_act extends AppCompatActivity
             {
                 if ((parent.getId() == R.id.conduction)&&(GetType!="Собственный"))
                 {
-                    GetType = GiveType(MaterialParams.nameMaterial, (String)parent.getItemAtPosition(position));
+                    GetType = MaterialParams.GiveTypeOfDopant((String)parent.getItemAtPosition(position));
                     LastChoise = GetType;
                     if (LastChoise=="N-тип")
                         dopant.setText("Nd, см-3");
@@ -222,7 +217,7 @@ public class Semi_act extends AppCompatActivity
                         dopant.setText("Na, см-3");
                 }
                 else
-                    LastChoise = GiveType(MaterialParams.nameMaterial, (String)parent.getItemAtPosition(position));
+                    LastChoise = MaterialParams.GiveTypeOfDopant((String)parent.getItemAtPosition(position));
             }
 
             @Override
@@ -231,7 +226,6 @@ public class Semi_act extends AppCompatActivity
 
             }
         };
-
 
         //Присваиваю спиннерам слушатель
         mater.setOnItemSelectedListener(SpinnerListener);
@@ -249,124 +243,6 @@ public class Semi_act extends AppCompatActivity
 
     }
 
-    //Функция для считывания констант материала полупроводника из файла для этого материала
-    public void ParamsReader (MaterialParams material ,String PathToFile)
-    {
-        ArrayList<String> Dopings = new ArrayList<>();
-
-        try (BufferedReader bufRead = new BufferedReader(new FileReader(PathToFile)))
-        {
-            double val = 0;
-            double[] energy;
-            Object obj = null;
-            boolean flag = true;
-            // Читаем из файла до тех пор, пока не закончатся строковые типы
-            while (flag)
-            {
-                try
-                {
-                    obj = bufRead.readLine();
-                    val = Double.parseDouble(obj.toString());
-                    flag = false;
-                }
-                catch (NumberFormatException e)
-                {
-                    Dopings.add(obj.toString());
-                }
-            }
-            //Создаем локальный массив энергий и примесей
-            energy = new double[Dopings.size()];
-            String[] dopings = new String[Dopings.size()];
-            Dopings.toArray(dopings);
-            //Заполнение локального массива энергий активации
-            energy[0] = val;
-            for (int i=1; i<Dopings.size(); i++)
-                energy[i] = Double.parseDouble(bufRead.readLine());
-            //Передаем считанные данные в объект MaterialParams
-            material.setDopings(Dopings.size(),dopings);
-            material.setDopingsEnergy(Dopings.size(),energy);
-            //Заполняем оставшиеся параметры
-            material.effMass_electron = Double.parseDouble(bufRead.readLine());
-            material.effMass_hole = Double.parseDouble(bufRead.readLine());
-            material.mobility_electron = Double.parseDouble(bufRead.readLine());
-            material.mobility_hole = Double.parseDouble(bufRead.readLine());
-            material.Eg0 = Double.parseDouble(bufRead.readLine());
-            material.koefEg = Double.parseDouble(bufRead.readLine());
-            material.dielectricConst = Double.parseDouble(bufRead.readLine());
-            //Проверка после считывания и активация словаря примесь-энергия
-            if (material.dielectricConst !=0 && (bufRead.readLine())==null)
-            {
-                Toast.makeText(this,material.nameMaterial+" загружен", Toast.LENGTH_SHORT).show();
-                material.ActivateDict();
-            }
-            else
-            {
-                Toast.makeText(this, "Неверный формат файла параметров материала!", Toast.LENGTH_LONG).show();
-            }
-        }
-        catch (FileNotFoundException e)
-        {
-            Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
-        }
-        catch (IOException e)
-        {
-            Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
-        }
-    }
-    //Функция для определения типа примеси
-    public String GiveType (String MaterialName, String Doping)
-    {
-        String Type = "";
-        String s;
-        String path = PATH_TO_DATA + "Dopings_" + MaterialName;
-        ArrayList<String> Dopings_n = new ArrayList<String>();
-        ArrayList<String> Dopings_p = new ArrayList<String>();
-
-        try (BufferedReader bufReader = new BufferedReader(new FileReader(path+"_n.txt")))
-        {
-            while ((s=bufReader.readLine())!=null)
-                Dopings_n.add(s);
-        }
-        catch (FileNotFoundException e)
-        {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        catch (IOException e)
-        {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        try (BufferedReader bufReader = new BufferedReader(new FileReader(path+"_p.txt")))
-        {
-            while ((s=bufReader.readLine())!=null)
-                Dopings_p.add(s);
-        }
-        catch (FileNotFoundException e)
-        {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        catch (IOException e)
-        {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        if (Dopings_n.indexOf(Doping)!=-1)
-        {
-            Toast.makeText(this, "N-тип", Toast.LENGTH_SHORT).show();
-            Type = "N_Type";
-        }
-        else if (Dopings_p.indexOf(Doping)!=-1)
-        {
-            Toast.makeText(this, "P-тип", Toast.LENGTH_SHORT).show();
-            Type = "P_Type";
-        }
-        else
-        {
-            Toast.makeText(this, "Примесь не найдена!", Toast.LENGTH_LONG).show();
-            Type = null;
-        }
-        return Type;
-    }
     //Выбор собственного полупроводника
     public void onCheckClick(View view)
     {
@@ -377,5 +253,9 @@ public class Semi_act extends AppCompatActivity
         }
         else
             GetType = LastChoise;
+    }
+    public Context context()
+    {
+        return getApplicationContext();
     }
 }
