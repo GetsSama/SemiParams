@@ -35,6 +35,7 @@ public class Semi_act extends AppCompatActivity
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
     String PATH_TO_DATA = "/data/data/com.example.semiparams/files/";
     MaterialParams MaterialParams;
+    TextView dopant;
 
     int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
     double Temp, ParamOne, ParamTwo;
@@ -44,7 +45,7 @@ public class Semi_act extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_semi);
-        TextView dopant = (TextView)findViewById(R.id.doping);
+        dopant = (TextView)findViewById(R.id.doping);
         TextView dinamic = (TextView)findViewById(R.id.Dinamic);
         TextView electron_val = (TextView)findViewById(R.id.electron_val);
         TextView hole_val = (TextView)findViewById(R.id.hole_val);
@@ -127,20 +128,17 @@ public class Semi_act extends AppCompatActivity
         Spinner ParamTwo = (Spinner) findViewById(R.id.param2);
         //Добаляю адаптеры для спиннеров
         ArrayAdapter<String> adapter_material = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, material);
-        //ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
         ArrayAdapter<String> adapter_param1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Param1);
         ArrayAdapter<String> adapter_param2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Param2);
         //Настраиваю адаптеры
         adapter_material.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter_param1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter_param2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Адаптирую спиннеры
         mater.setAdapter(adapter_material);
-        //TypeOfCond.setAdapter(adapter_type);
         ParamOne.setAdapter(adapter_param1);
         ParamTwo.setAdapter(adapter_param2);
-
+        //Спиннер для примесей, динамически изменяется
         ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
         adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         TypeOfCond.setAdapter(adapter_type);
@@ -211,9 +209,9 @@ public class Semi_act extends AppCompatActivity
                 {
                     GetType = MaterialParams.GiveTypeOfDopant((String)parent.getItemAtPosition(position));
                     LastChoise = GetType;
-                    if (LastChoise=="N-тип")
+                    if (LastChoise=="N_Type")
                         dopant.setText("Nd, см-3");
-                    else if(LastChoise=="P-тип")
+                    else if(LastChoise=="P_Type")
                         dopant.setText("Na, см-3");
                 }
                 else
@@ -232,30 +230,40 @@ public class Semi_act extends AppCompatActivity
         TypeOfCond.setOnItemSelectedListener(DopingListener);
         ParamOne.setOnItemSelectedListener(SpinnerListener);
         ParamTwo.setOnItemSelectedListener(SpinnerListener);
+
+        //Слушатель нажания на кнопку
         View.OnClickListener Solver = new View.OnClickListener()
         {
             @Override
             public void onClick(View buttonSolve)
             {
-
+                if(GetType=="N_Type")
+                    dopant.setText("Nd, см-3");
+                else if (GetType=="P_Type")
+                    dopant.setText("Na, см-3");
+                else
+                    dopant.setText("Ni, см-3");
             }
         };
-
+        Solve.setOnClickListener(Solver);
     }
 
     //Выбор собственного полупроводника
-    public void onCheckClick(View view)
+    public void onCheckClick (View view)
     {
         CheckBox check = (CheckBox) view;
         if (check.isChecked())
         {
             GetType = "Собственный";
+            dopant.setText("Ni, см-3");
         }
         else
+        {
             GetType = LastChoise;
-    }
-    public Context context()
-    {
-        return getApplicationContext();
+            if (GetType=="N_Type")
+                dopant.setText("Nd, см-3");
+            else
+                dopant.setText("Na, см-3");
+        }
     }
 }

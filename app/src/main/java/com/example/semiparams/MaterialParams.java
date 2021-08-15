@@ -3,17 +3,12 @@ package com.example.semiparams;
 import android.content.Context;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class MaterialParams
 {
@@ -36,27 +31,6 @@ public class MaterialParams
         ParamsReader(PATH + nameMaterial + ".txt");
         ActivateDict();
     }
-    /*MaterialParams(String nameMaterial, String[] Dopings, double[] activationEnergis, double effMass_electron, double effMass_hole, double mobility_electron, double mobility_hole,double Eg0,double koefEg, double dielectricConst)
-    {
-        int len = Dopings.length;
-        this.Dopings = new String[len];
-        for (int i=0; i<len; i++)
-            this.Dopings[i] = Dopings[i];
-
-        len = activationEnergis.length;
-        this.activationEnergis = new double[len];
-        for (int i=0; i<len; i++)
-            this.activationEnergis[i]=activationEnergis[i];
-
-        this.nameMaterial = nameMaterial;
-        this.effMass_electron = effMass_electron;
-        this.effMass_hole = effMass_hole;
-        this.mobility_electron = mobility_electron;
-        this.mobility_hole = mobility_hole;
-        this.Eg0 = Eg0;
-        this.koefEg = koefEg;
-        this.dielectricConst = dielectricConst;
-    }*/
 
     //Методы для получения параметров, зависящих от температуры
     public double Dn(double T)

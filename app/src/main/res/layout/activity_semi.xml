@@ -45,8 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/conduct"
-            android:layout_alignParentLeft="true"
             android:onClick="onCheckClick"
+            android:layout_alignParentLeft="true"
             android:text="Собственный"
             android:textSize="20dp" />
 
