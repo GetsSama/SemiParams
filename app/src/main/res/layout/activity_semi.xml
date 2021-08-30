@@ -106,15 +106,34 @@
 
         <EditText
             android:id="@+id/text1"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:hint="Значение Параметра 1"
-            android:inputType="numberDecimal"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/paramOne"
+            android:layout_toLeftOf="@+id/E"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/paramOne"/>
+            android:gravity="center"
+            android:hint="Значение Параметра 1"
+            android:inputType="numberDecimal" />
 
+        <TextView
+            android:id="@+id/E"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/param2"
+            android:layout_below="@+id/paramOne"
+            android:layout_toLeftOf="@+id/power"
+            android:text="E"
+            android:textSize="25dp" />
+
+        <EditText
+            android:id="@+id/power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/paramOne"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:hint="Степень"
+            android:inputType="numberDecimal"/>
 
         <TextView
             android:id="@+id/paramTwo"
@@ -137,15 +156,34 @@
 
         <EditText
             android:id="@+id/text2"
+            android:layout_width= "match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:hint="Значение Параметра 2"
-            android:inputType="numberDecimal"
-            android:gravity="center"
+            android:layout_below="@+id/paramTwo"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/paramTwo"/>
+            android:layout_toLeftOf="@+id/E2"
+            android:gravity="center"
+            android:hint="Значение Параметра 2"
+            android:inputType="numberDecimal" />
 
+        <TextView
+            android:id="@+id/E2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E"
+            android:textSize="25dp"
+            android:layout_toLeftOf="@+id/power2"
+            android:layout_below="@+id/paramTwo"
+            android:layout_above="@+id/Solve"/>
+
+        <EditText
+            android:id="@+id/power2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/paramTwo"
+            android:gravity="center"
+            android:hint="Степень"
+            android:inputType="numberDecimal"/>
 
         <Button
             android:id="@+id/Solve"
@@ -299,6 +337,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/doping"
             android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/Nc"
             android:gravity="center"
             android:textSize="25dp" />
 
@@ -312,14 +351,14 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
+            android:id="@+id/Nv_val"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Nv_val"
-            android:textSize="25dp"
             android:layout_below="@+id/Nc"
-            android:layout_toRightOf="@+id/Nv"
             android:layout_alignParentRight="true"
-            android:gravity="center"/>
+            android:layout_toRightOf="@+id/Nv"
+            android:gravity="center"
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -349,35 +388,55 @@
             android:layout_alignParentLeft="true" />
 
         <TextView
+            android:id="@+id/Dinamic_val"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Dinamic_val"
-            android:textSize="25dp"
             android:layout_below="@+id/Eg"
-            android:layout_toRightOf="@+id/Dinamic"
             android:layout_alignParentRight="true"
-            android:gravity="center" />
+            android:layout_toRightOf="@+id/Dinamic"
+            android:gravity="center"
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/coefDiff"
-            android:text="D, см2/с"
+            android:id="@+id/coefDiffN"
+            android:text="Dn, см2/с"
             android:textSize="25dp"
             android:layout_below="@+id/Dinamic"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="15dp"/>
+            android:layout_alignParentLeft="true"/>
 
         <TextView
+            android:id="@+id/coefDiff_valN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/coefDiff_val"
-            android:textSize="25dp"
             android:layout_below="@+id/Dinamic"
-            android:layout_toRightOf="@+id/coefDiff"
             android:layout_alignParentRight="true"
+
+            android:layout_toRightOf="@+id/coefDiffN"
             android:gravity="center"
-            android:layout_marginBottom="15dp"/>
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/coefDiffP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/coefDiffN"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="15dp"
+            android:text="Dp, см2/с"
+            android:textSize="25dp" />
+
+        <TextView
+            android:id="@+id/coefDiff_valP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/coefDiffN"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:layout_toRightOf="@+id/coefDiffN"
+            android:gravity="center"
+            android:textSize="25dp" />
 
     </RelativeLayout>
 </ScrollView>

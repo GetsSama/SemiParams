@@ -129,8 +129,7 @@ public class MaterialParams
     }
 
     //Методы для получения разнообразных парметров материала
-    public ArrayList<String> getDopings()
-    {
+    public ArrayList<String> getDopings() {
         ArrayList<String> Type = new ArrayList<>();
         for (int i=0; i<numberOfDopings(); i++)
         {
@@ -146,8 +145,7 @@ public class MaterialParams
     {
         return DopEnergisDict.get(Dopant);
     }
-    public String GiveTypeOfDopant (String Dopant)
-    {
+    public String GiveTypeOfDopant (String Dopant) {
         String Type = "";
         String s;
         String path = PATH + "Dopings_" + nameMaterial;
@@ -199,4 +197,8 @@ public class MaterialParams
         }
         return Type;
     }
+    public Double electronEffMass() {return effMass_electron;}
+    public Double holeEffMass() {return effMass_hole;}
+    public Double electronMobility() {return mobility_electron;}
+    public Double holeMobility() {return mobility_hole;}
 }

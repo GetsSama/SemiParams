@@ -1,7 +1,7 @@
 package com.example.semiparams;
 
-import android.content.Context;
-import android.nfc.FormatException;
+import static com.example.semiparams.SemiConstants.*;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,34 +11,27 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Semi_act extends AppCompatActivity
 {
     String[] material = {"Si", "Ge", "GaAs"};
-    //String[] Type;
     ArrayList<String> Type = new ArrayList<String>();
-    String GetType, LastChoise;
+    String GetType, LastChoise, Doping;
     String[] Param1 = {"Удельное сопротивление", "Проводимость", "Концентрация примеси"};
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
-    String PATH_TO_DATA = "/data/data/com.example.semiparams/files/";
     MaterialParams MaterialParams;
     TextView dopant;
 
-    int SpinnerChoiseOne, SpinnerChoiseTwo, SpinnerChoiseThree, SpinnerChoiseFoure;
-    double Temp, ParamOne, ParamTwo;
+    String SpinnerChoiseThree, SpinnerChoiseFoure;
+    double Temp, ParametrOne, ParametrTwo, PowerOne, PowerTwo, Nc, Nv, ni, Conc;
+    boolean flag;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -57,9 +50,13 @@ public class Semi_act extends AppCompatActivity
         TextView Nv_val = (TextView)findViewById(R.id.Nv_val);
         TextView Eg_val = (TextView)findViewById(R.id.Eg_val);
         TextView Dinamic_val = (TextView)findViewById(R.id.Dinamic_val);
+        TextView Dn = (TextView)findViewById(R.id.coefDiff_valN);
+        TextView Dp = (TextView)findViewById(R.id.coefDiff_valP);
         EditText Temper = (EditText)findViewById(R.id.temper_val);
         EditText paramOne = (EditText)findViewById(R.id.text1);
         EditText paramTwo = (EditText)findViewById(R.id.text2);
+        EditText PowOne = (EditText)findViewById(R.id.power);
+        EditText PowTwo = (EditText)findViewById(R.id.power2);
         Button Solve = (Button)findViewById(R.id.Solve);
         CheckBox Check = (CheckBox)findViewById(R.id.Native);
         Type.add("");
@@ -94,7 +91,7 @@ public class Semi_act extends AppCompatActivity
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
                 //ParamOne = Float.parseFloat(charSequence.toString());
-                ParamOne = Double.parseDouble(charSequence.toString());
+                ParametrOne = Double.parseDouble(charSequence.toString());
             }
 
             @Override
@@ -112,12 +109,44 @@ public class Semi_act extends AppCompatActivity
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
                 //ParamTwo = Float.parseFloat(charSequence.toString());
-                ParamTwo = Double.parseDouble(charSequence.toString());
+                ParametrTwo = Double.parseDouble(charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable)
             {
+            }
+        });
+        PowOne.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                PowerOne = Double.parseDouble(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        PowTwo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                PowerTwo = Double.parseDouble(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -144,8 +173,7 @@ public class Semi_act extends AppCompatActivity
         TypeOfCond.setAdapter(adapter_type);
 
         //Слушатель нажатий на спиннеры
-        AdapterView.OnItemSelectedListener SpinnerListener = new AdapterView.OnItemSelectedListener()
-        {
+        AdapterView.OnItemSelectedListener SpinnerListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id)
             {
@@ -162,31 +190,31 @@ public class Semi_act extends AppCompatActivity
                         switch ((String) adapterView.getItemAtPosition(position))
                         {
                             case "Удельное сопротивление":
-                                SpinnerChoiseThree = 1;
+                                SpinnerChoiseThree = "Resist";
                                 break;
                             case "Проводимость":
-                                SpinnerChoiseThree = 2;
+                                SpinnerChoiseThree = "Conduct";
                                 break;
                             case "Концентрация примеси":
-                                SpinnerChoiseThree = 3;
+                                SpinnerChoiseThree = "Concentration";
                                 break;
                             default:
-                                SpinnerChoiseThree = 1;
+                                SpinnerChoiseThree = "Resist";
                         };
                         break;
                     case R.id.param2:
                         switch ((String) adapterView.getItemAtPosition(position))
                         {
                             case "Диффузионная длина":
-                                SpinnerChoiseFoure = 1;
+                                SpinnerChoiseFoure = "Lenght";
                                 break;
                             case "Время жизни":
-                                SpinnerChoiseFoure = 2;
+                                SpinnerChoiseFoure = "Time";
                                 break;
                             default:
-                                SpinnerChoiseFoure = 1;
+                                SpinnerChoiseFoure = "Lenght";
                         };
-                        if (SpinnerChoiseFoure==1)
+                        if (SpinnerChoiseFoure.equals("Lenght"))
                             dinamic.setText("Tau, с");
                         else
                             dinamic.setText("L, см");
@@ -205,17 +233,22 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                if ((parent.getId() == R.id.conduction)&&(GetType!="Собственный"))
+                flag = GetType.equals("Собственный");
+                if ((parent.getId() == R.id.conduction)&&(!flag))
                 {
                     GetType = MaterialParams.GiveTypeOfDopant((String)parent.getItemAtPosition(position));
                     LastChoise = GetType;
-                    if (LastChoise=="N_Type")
+                    Doping = (String)parent.getItemAtPosition(position);
+                    if (LastChoise.equals("N_Type"))
                         dopant.setText("Nd, см-3");
-                    else if(LastChoise=="P_Type")
+                    else if(LastChoise.equals("P_Type"))
                         dopant.setText("Na, см-3");
                 }
                 else
+                {
                     LastChoise = MaterialParams.GiveTypeOfDopant((String)parent.getItemAtPosition(position));
+                    Doping = (String)parent.getItemAtPosition(position);
+                }
             }
 
             @Override
@@ -237,12 +270,80 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onClick(View buttonSolve)
             {
-                if(GetType=="N_Type")
-                    dopant.setText("Nd, см-3");
-                else if (GetType=="P_Type")
-                    dopant.setText("Na, см-3");
+                double ParamOneVal, ParamTwoVal, N, P;
+                ParamOneVal = ParametrOne*Math.pow(PowerOne,10);
+                ParamTwoVal = ParametrTwo*Math.pow(PowerTwo,10);
+
+                Nc = densityNumber*Math.pow(MaterialParams.electronEffMass()*Temp, 1.5);
+                Nv = densityNumber*Math.pow(MaterialParams.holeEffMass()*Temp,1.5);
+                ni = Math.sqrt(Nc*Nv)*Math.exp(-(MaterialParams.Eg(Temp))/(2*Bolcman*Temp));
+                Nc_val.setText(formatOut(Nc));
+                Nv_val.setText(formatOut(Nv));
+                intrinsic_val.setText(formatOut(ni));
+                Eg_val.setText(formatOut(MaterialParams.Eg(Temp)));
+                Dn.setText(formatOut(MaterialParams.Dn(Temp)));
+                Dp.setText(formatOut(MaterialParams.Dp(Temp)));
+
+                flag = GetType.equals("Собственный");
+                if (!flag)
+                {
+                    switch (SpinnerChoiseThree) {
+                        case "Resist":
+                            resistiv_val.setText(formatOut(ParamOneVal));
+                            conductivity_val.setText(formatOut(Math.pow(ParamOneVal,-1)));
+                            if (GetType.equals("N_Type"))
+                                Conc = 1/(electronCharge*ParamOneVal*MaterialParams.electronMobility());
+                            else
+                                Conc = 1/(electronCharge*ParamOneVal*MaterialParams.holeMobility());
+                            doping_val.setText(formatOut(Conc));
+                        break;
+
+                        case "Conduct":
+                            resistiv_val.setText(formatOut(Math.pow(ParamOneVal,-1)));
+                            conductivity_val.setText(formatOut(ParamOneVal));
+                            if (GetType.equals("N_Type"))
+                                Conc = ParamOneVal/(electronCharge*MaterialParams.electronMobility());
+                            else
+                                Conc = ParamOneVal/(electronCharge*MaterialParams.holeMobility());
+                            doping_val.setText(formatOut(Conc));
+                        break;
+
+                        case "Concentration":
+                            doping_val.setText(formatOut(ParamOneVal));
+                            Conc = ParamOneVal;
+                            if (GetType.equals("N_Type"))
+                            {
+                                resistiv_val.setText(formatOut(1/(electronCharge*ParamOneVal*MaterialParams.electronMobility())));
+                                conductivity_val.setText(formatOut(electronCharge*ParamOneVal*MaterialParams.electronMobility()));
+                            }
+                            else
+                            {
+                                resistiv_val.setText(formatOut(1/(electronCharge*ParamOneVal*MaterialParams.holeMobility())));
+                                conductivity_val.setText(formatOut(electronCharge*ParamOneVal*MaterialParams.holeMobility()));
+                            }
+                        break;
+                    }
+                    if (GetType.equals("N_Type"))
+                    {
+                        N = Math.sqrt(Nc*Conc/2)*Math.exp(-MaterialParams.EnergyOfDopant(Doping)/(2*Bolcman*Temp));
+                        P = Math.pow(ni,2)/N;
+                    }
+                    else
+                    {
+                        P = Math.sqrt(Nv*Conc/2)*Math.exp(-MaterialParams.EnergyOfDopant(Doping)/(2*Bolcman*Temp));
+                        N = Math.pow(ni,2)/P;
+                    }
+                    electron_val.setText(formatOut(N));
+                    hole_val.setText(formatOut(P));
+                }
                 else
-                    dopant.setText("Ni, см-3");
+                {
+                    doping_val.setText(formatOut(ni));
+                    electron_val.setText(formatOut(ni));
+                    hole_val.setText(formatOut(ni));
+                }
+
+
             }
         };
         Solve.setOnClickListener(Solver);
@@ -260,10 +361,18 @@ public class Semi_act extends AppCompatActivity
         else
         {
             GetType = LastChoise;
-            if (GetType=="N_Type")
+            if (GetType.equals("N_Type"))
                 dopant.setText("Nd, см-3");
             else
                 dopant.setText("Na, см-3");
         }
+    }
+
+    public String formatOut(double val)
+    {
+        if ((val<-100)|(val>100))
+            return String.format("%.3e",val);
+        else
+            return String.format("%.3f",val);
     }
 }
