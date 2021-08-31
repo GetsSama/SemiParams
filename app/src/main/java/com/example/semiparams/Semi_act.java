@@ -73,13 +73,16 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                //Temp = Float.parseFloat(charSequence.toString());
-                Temp = Double.parseDouble(charSequence.toString());
+                if (charSequence.length()!=0)
+                    Temp = Double.parseDouble(charSequence.toString());
+                else
+                    Temp = 0;
             }
 
             @Override
             public void afterTextChanged(Editable editable)
             {
+
             }
         });
         paramOne.addTextChangedListener(new TextWatcher() {
@@ -91,8 +94,10 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                //ParamOne = Float.parseFloat(charSequence.toString());
-                ParametrOne = Double.parseDouble(charSequence.toString());
+                if (charSequence.length()!=0)
+                    ParametrOne = Double.parseDouble(charSequence.toString());
+                else
+                    ParametrOne = 0;
             }
 
             @Override
@@ -109,8 +114,10 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                //ParamTwo = Float.parseFloat(charSequence.toString());
-                ParametrTwo = Double.parseDouble(charSequence.toString());
+                if (charSequence.length()!=0)
+                    ParametrTwo = Double.parseDouble(charSequence.toString());
+                else
+                    ParametrTwo = 0;
             }
 
             @Override
@@ -126,7 +133,10 @@ public class Semi_act extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                PowerOne = Double.parseDouble(s.toString());
+                if (s.length()!=0)
+                    PowerOne = Double.parseDouble(s.toString());
+                else
+                    PowerOne = 0;
             }
 
             @Override
@@ -142,7 +152,10 @@ public class Semi_act extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                PowerTwo = Double.parseDouble(s.toString());
+                if (s.length()!=0)
+                    PowerTwo = Double.parseDouble(s.toString());
+                else
+                    PowerTwo = 0;
             }
 
             @Override
@@ -368,12 +381,25 @@ public class Semi_act extends AppCompatActivity
                 dopant.setText("Na, см-3");
         }
     }
-
+    //Форматный вывод
     public String formatOut(double val)
     {
         if ((val<-100)|(val>100))
             return String.format("%.3e",val);
         else
             return String.format("%.3f",val);
+    }
+    //Расчет концентрации основных носителей
+    public double CarriersConc (double densityConc, double dopingConc, String doping, double ni)
+    {
+        double N0;
+        N0 = Math.sqrt(densityConc*dopingConc/2)*Math.exp(-MaterialParams.EnergyOfDopant(doping)/(2*Bolcman*Temp));
+
+        if (N0<dopingConc)
+            return N0;
+        else if ((N0>dopingConc)&&(dopingConc>ni))
+            return dopingConc;
+        else
+            return ni;
     }
 }
