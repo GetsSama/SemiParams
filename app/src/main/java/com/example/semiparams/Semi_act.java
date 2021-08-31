@@ -32,6 +32,7 @@ public class Semi_act extends AppCompatActivity
     String SpinnerChoiseThree, SpinnerChoiseFoure;
     double Temp, ParametrOne, ParametrTwo, PowerOne, PowerTwo, Nc, Nv, ni, Conc;
     boolean flag;
+    String intr = "Собственный";
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -233,8 +234,8 @@ public class Semi_act extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                flag = GetType.equals("Собственный");
-                if ((parent.getId() == R.id.conduction)&&(!flag))
+                //flag = GetType.equals(intr);
+                if ((parent.getId() == R.id.conduction)&&(GetType!=intr))
                 {
                     GetType = MaterialParams.GiveTypeOfDopant((String)parent.getItemAtPosition(position));
                     LastChoise = GetType;
@@ -271,8 +272,8 @@ public class Semi_act extends AppCompatActivity
             public void onClick(View buttonSolve)
             {
                 double ParamOneVal, ParamTwoVal, N, P;
-                ParamOneVal = ParametrOne*Math.pow(PowerOne,10);
-                ParamTwoVal = ParametrTwo*Math.pow(PowerTwo,10);
+                ParamOneVal = ParametrOne*Math.pow(10,PowerOne);
+                ParamTwoVal = ParametrTwo*Math.pow(10,PowerTwo);
 
                 Nc = densityNumber*Math.pow(MaterialParams.electronEffMass()*Temp, 1.5);
                 Nv = densityNumber*Math.pow(MaterialParams.holeEffMass()*Temp,1.5);
@@ -284,8 +285,8 @@ public class Semi_act extends AppCompatActivity
                 Dn.setText(formatOut(MaterialParams.Dn(Temp)));
                 Dp.setText(formatOut(MaterialParams.Dp(Temp)));
 
-                flag = GetType.equals("Собственный");
-                if (!flag)
+                //flag = GetType.equals("Собственный");
+                if (GetType!=intr)
                 {
                     switch (SpinnerChoiseThree) {
                         case "Resist":
@@ -355,7 +356,7 @@ public class Semi_act extends AppCompatActivity
         CheckBox check = (CheckBox) view;
         if (check.isChecked())
         {
-            GetType = "Собственный";
+            GetType = intr;
             dopant.setText("Ni, см-3");
         }
         else
