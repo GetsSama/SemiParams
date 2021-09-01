@@ -26,10 +26,11 @@ public class Semi_act extends AppCompatActivity
     String GetType, LastChoise, Doping;
     String[] Param1 = {"Удельное сопротивление", "Проводимость", "Концентрация примеси"};
     String[] Param2 = {"Диффузионная длина", "Время жизни"};
+    String[] carType = {"Электроны", "Дырки"};
     MaterialParams MaterialParams;
     TextView dopant;
 
-    String SpinnerChoiseThree, SpinnerChoiseFoure;
+    String SpinnerChoiseThree, SpinnerChoiseFoure, SpinnerChoiseFive;
     double Temp, ParametrOne, ParametrTwo, PowerOne, PowerTwo, Nc, Nv, ni, Conc;
     boolean flag;
     String intr = "Собственный";
@@ -133,10 +134,14 @@ public class Semi_act extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length()!=0)
+                try
+                {
                     PowerOne = Double.parseDouble(s.toString());
-                else
+                }
+                catch (NullPointerException|NumberFormatException e)
+                {
                     PowerOne = 0;
+                }
             }
 
             @Override
@@ -152,10 +157,14 @@ public class Semi_act extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length()!=0)
+                try
+                {
                     PowerTwo = Double.parseDouble(s.toString());
-                else
+                }
+                catch (NullPointerException|NumberFormatException e)
+                {
                     PowerTwo = 0;
+                }
             }
 
             @Override
@@ -164,23 +173,27 @@ public class Semi_act extends AppCompatActivity
             }
         });
 
-        //Создаю 4 спиннера
+        //Создаю спиннеры
         Spinner mater = (Spinner) findViewById(R.id.mater);
         Spinner TypeOfCond = (Spinner) findViewById(R.id.conduction);
         Spinner ParamOne = (Spinner) findViewById(R.id.param1);
         Spinner ParamTwo = (Spinner) findViewById(R.id.param2);
+        Spinner CarrierType = (Spinner)findViewById(R.id.carrierType);
         //Добаляю адаптеры для спиннеров
         ArrayAdapter<String> adapter_material = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, material);
         ArrayAdapter<String> adapter_param1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Param1);
         ArrayAdapter<String> adapter_param2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Param2);
+        ArrayAdapter<String> adapter_carier = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, carType);
         //Настраиваю адаптеры
         adapter_material.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter_param1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter_param2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter_carier.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Адаптирую спиннеры
         mater.setAdapter(adapter_material);
         ParamOne.setAdapter(adapter_param1);
         ParamTwo.setAdapter(adapter_param2);
+        CarrierType.setAdapter(adapter_carier);
         //Спиннер для примесей, динамически изменяется
         ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Type);
         adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -199,9 +212,10 @@ public class Semi_act extends AppCompatActivity
                         Type.clear();
                         Type.addAll(MaterialParams.getDopings());
                         adapter_type.notifyDataSetChanged();
-                        break;
+                    break;
+
                     case R.id.param1:
-                        switch ((String) adapterView.getItemAtPosition(position))
+                        switch (ItemText)
                         {
                             case "Удельное сопротивление":
                                 SpinnerChoiseThree = "Resist";
@@ -215,9 +229,10 @@ public class Semi_act extends AppCompatActivity
                             default:
                                 SpinnerChoiseThree = "Resist";
                         };
-                        break;
+                    break;
+
                     case R.id.param2:
-                        switch ((String) adapterView.getItemAtPosition(position))
+                        switch (ItemText)
                         {
                             case "Диффузионная длина":
                                 SpinnerChoiseFoure = "Lenght";
@@ -232,7 +247,19 @@ public class Semi_act extends AppCompatActivity
                             dinamic.setText("Tau, с");
                         else
                             dinamic.setText("L, см");
-                        break;
+                    break;
+
+                    case R.id.carrierType:
+                        switch (ItemText)
+                        {
+                            case "Электроны":
+                                SpinnerChoiseFive = "Electrons";
+                            break;
+                            case "Дырки":
+                                SpinnerChoiseFive = "Holes";
+                            break;
+                        }
+                    break;
                 };
             }
 
@@ -277,6 +304,7 @@ public class Semi_act extends AppCompatActivity
         TypeOfCond.setOnItemSelectedListener(DopingListener);
         ParamOne.setOnItemSelectedListener(SpinnerListener);
         ParamTwo.setOnItemSelectedListener(SpinnerListener);
+        CarrierType.setOnItemSelectedListener(SpinnerListener);
 
         //Слушатель нажания на кнопку
         View.OnClickListener Solver = new View.OnClickListener()
@@ -298,10 +326,11 @@ public class Semi_act extends AppCompatActivity
                 Dn.setText(formatOut(MaterialParams.Dn(Temp)));
                 Dp.setText(formatOut(MaterialParams.Dp(Temp)));
 
-                //flag = GetType.equals("Собственный");
+
                 if (GetType!=intr)
                 {
-                    switch (SpinnerChoiseThree) {
+                    switch (SpinnerChoiseThree)
+                    {
                         case "Resist":
                             resistiv_val.setText(formatOut(ParamOneVal));
                             conductivity_val.setText(formatOut(Math.pow(ParamOneVal,-1)));
@@ -339,12 +368,12 @@ public class Semi_act extends AppCompatActivity
                     }
                     if (GetType.equals("N_Type"))
                     {
-                        N = Math.sqrt(Nc*Conc/2)*Math.exp(-MaterialParams.EnergyOfDopant(Doping)/(2*Bolcman*Temp));
+                        N = carriersConc(Nc);
                         P = Math.pow(ni,2)/N;
                     }
                     else
                     {
-                        P = Math.sqrt(Nv*Conc/2)*Math.exp(-MaterialParams.EnergyOfDopant(Doping)/(2*Bolcman*Temp));
+                        P = carriersConc(Nv);
                         N = Math.pow(ni,2)/P;
                     }
                     electron_val.setText(formatOut(N));
@@ -355,9 +384,38 @@ public class Semi_act extends AppCompatActivity
                     doping_val.setText(formatOut(ni));
                     electron_val.setText(formatOut(ni));
                     hole_val.setText(formatOut(ni));
+                    conductivity_val.setText(formatOut(electronCharge*ni*(MaterialParams.holeMobility()+MaterialParams.electronMobility())));
+                    resistiv_val.setText(formatOut(1/(electronCharge*ni*(MaterialParams.electronMobility()+MaterialParams.holeMobility()))));
                 }
 
+                switch (SpinnerChoiseFive)
+                {
+                    case "Electrons":
+                        switch (SpinnerChoiseFoure)
+                        {
+                            case "Lenght":
+                                Dinamic_val.setText(formatOut(Math.pow(ParamTwoVal,2)/MaterialParams.Dn(Temp)));
+                            break;
 
+                            case "Time":
+                                Dinamic_val.setText(formatOut(Math.sqrt(MaterialParams.Dn(Temp)*ParamTwoVal)));
+                            break;
+                        }
+                    break;
+
+                    case "Holes":
+                        switch (SpinnerChoiseFoure)
+                        {
+                            case"Lenght":
+                                Dinamic_val.setText(formatOut(Math.pow(ParamTwoVal,2)/MaterialParams.Dp(Temp)));
+                                break;
+
+                            case "Time":
+                                Dinamic_val.setText(formatOut(Math.sqrt(MaterialParams.Dp(Temp)*ParamTwoVal)));
+                                break;
+                        }
+                    break;
+                }
             }
         };
         Solve.setOnClickListener(Solver);
@@ -384,21 +442,21 @@ public class Semi_act extends AppCompatActivity
     //Форматный вывод
     public String formatOut(double val)
     {
-        if ((val<-100)|(val>100))
+        if ((val<1e-3)|(val>100))
             return String.format("%.3e",val);
         else
             return String.format("%.3f",val);
     }
     //Расчет концентрации основных носителей
-    public double CarriersConc (double densityConc, double dopingConc, String doping, double ni)
+    public double carriersConc (double densityConc)
     {
         double N0;
-        N0 = Math.sqrt(densityConc*dopingConc/2)*Math.exp(-MaterialParams.EnergyOfDopant(doping)/(2*Bolcman*Temp));
+        N0 = Math.sqrt(densityConc*Conc/2)*Math.exp(-MaterialParams.EnergyOfDopant(Doping)/(2*Bolcman*Temp));
 
-        if (N0<dopingConc)
+        if (N0<Conc)
             return N0;
-        else if ((N0>dopingConc)&&(dopingConc>ni))
-            return dopingConc;
+        else if ((N0>Conc)&&(Conc>ni))
+            return Conc;
         else
             return ni;
     }
